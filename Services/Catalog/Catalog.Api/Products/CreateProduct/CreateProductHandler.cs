@@ -4,7 +4,7 @@ namespace Catalog.Api.Products.CreateProduct
     public record CreateProductCommand(string Name, List<String> Category, string Description, string ImageFile, decimal Price)
         : ICommand<CreateProductResult>;
     public record CreateProductResult(Guid Id);
-    public class CreateProductCommandHandler
+    public class CreateProductCommandHandler(IDocumentSession session)
         : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
         public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
@@ -19,8 +19,12 @@ namespace Catalog.Api.Products.CreateProduct
                 Price = command.Price,
             };
             //save to database
-            //return result
-            return new CreateProductResult(Guid.NewGuid());
+            session.Store(product);
+
+            await session.SaveChangesAsync(cancellationToken);
+            //retrun create product result
+            return new CreateProductResult(product.Id);
+
         }
     }
 }

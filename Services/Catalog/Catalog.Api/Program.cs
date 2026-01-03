@@ -9,6 +9,10 @@ builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssemblyContaining<CreateProductCommand>();
 });
 
+builder.Services.AddMarten(opt =>
+{
+    opt.Connection(builder.Configuration.GetConnectionString("Database")!);
+}).UseLightweightSessions();
 var app = builder.Build();
 
 app.MapCarter();
