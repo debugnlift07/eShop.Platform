@@ -1,4 +1,6 @@
-﻿namespace Catalog.Api.Products.UpdateProduct
+﻿using Catalog.Api.Exceptions;
+
+namespace Catalog.Api.Products.UpdateProduct
 {
     public record UpdateProductCommand(
             Guid Id,
@@ -35,8 +37,7 @@
                 .LoadAsync<Product>(request.Id, cancellationToken);
 
             if (product is null)
-                throw new KeyNotFoundException(
-                    $"Product with Id {request.Id} not found");
+                throw new ProductNotFoundException(request.Id);
 
             // ✅ Update fields
             product.Name = request.Name;

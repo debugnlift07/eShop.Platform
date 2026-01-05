@@ -1,27 +1,36 @@
-using Catalog.Api.Products.CreateProduct;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+
+using BuildingBlocks.Exceptions.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCarter();
 
 //for CQRS- saggregrate command and query
 builder.Services.AddMediatR(config =>
 {
-    config.RegisterServicesFromAssemblyContaining<CreateProductCommand>();
+    config.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    config.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+
 });
 
 //fuluent validation
 builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
+//carter for routing 
+builder.Services.AddCarter();
 
 //marten for db
 builder.Services.AddMarten(opt =>
 {
     opt.Connection(builder.Configuration.GetConnectionString("Database")!);
 }).UseLightweightSessions();
+
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
 var app = builder.Build();
 
-//carter for routing 
 app.MapCarter();
+
+app.UseExceptionHandler(options => { });
 
 app.Run();
