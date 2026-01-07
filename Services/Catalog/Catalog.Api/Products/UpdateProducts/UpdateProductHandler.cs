@@ -19,20 +19,17 @@ namespace Catalog.Api.Products.UpdateProduct
         private readonly ILogger<UpdateProductHandler> _logger;
 
         public UpdateProductHandler(
-            IDocumentSession session,
-            ILogger<UpdateProductHandler> logger)
+            IDocumentSession session)
+           
         {
             _session = session;
-            _logger = logger;
         }
 
         public async Task<UpdateProductResult> Handle(
             UpdateProductCommand request,
             CancellationToken cancellationToken)
         {
-            _logger.LogInformation(
-                "Updating product with Id {ProductId}", request.Id);
-
+           
             var product = await _session
                 .LoadAsync<Product>(request.Id, cancellationToken);
 
