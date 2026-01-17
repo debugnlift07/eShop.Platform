@@ -6,3 +6,4 @@ global using Catalog.Api.Models;
 global using Marten;
 global using FluentValidation;
 global using BuildingBlocks.Behaviours;
+global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
