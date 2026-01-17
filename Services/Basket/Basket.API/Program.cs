@@ -1,6 +1,9 @@
+using Carter;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
 
+//carter for routing 
+builder.Services.AddCarter();
 app.Run();
